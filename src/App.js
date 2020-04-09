@@ -7,7 +7,7 @@ import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 import './App.css';
 
-import { auth } from './firebase/firebase.utils'
+import { auth, createOrRetrieveUserProfileDocument } from './firebase/firebase.utils'
 
 class App extends Component {
 
@@ -25,10 +25,34 @@ class App extends Component {
   componentDidMount() {
 
     this.unsubscribeFromAuth =
-      auth.onAuthStateChanged((user) => {
-        this.setState({
-          currentUser: user
-        })
+
+      // when the AuthState changes e.g. when a user logs in
+      auth.onAuthStateChanged(async userAuth => {
+
+        // userAuth is an auth object from firebase
+        if (userAuth) {
+          const userRef = await createOrRetrieveUserProfileDocument(userAuth);
+
+          userRef.onSnapshot(snapShot => {
+            this.setState({
+              currentUser: {
+                id: snapShot.id,
+                ...snapShot.data()
+              }
+            })
+
+          })
+        } else {
+          this.setState({
+            currentUser: null
+          })
+
+          /*
+          this.setState({
+            currentUser: userAuth
+          })
+          */
+        }
       });
   }
 
