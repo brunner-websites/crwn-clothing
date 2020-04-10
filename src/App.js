@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
 import HomePage from './pages/homepage/homepage.component';
 import Shop from './pages/shop/shop.compoment';
@@ -62,7 +62,8 @@ class App extends Component {
 
             <Route exact path="/" component={HomePage} />
             <Route exact path="/shop" component={Shop} />
-            <Route exact path="/signin" component={SignInAndSignUpPage} />
+            <Route exact path="/signin" render={() =>
+              this.props.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />} />
 
           </Switch>
         </BrowserRouter>
@@ -72,10 +73,18 @@ class App extends Component {
 
 }
 
+// this function when passed into the connect method will receive the 'state'
+// here we're destructing the 'user' property from within the 'state' property
+const mapStateToProps = ({ user }) => ({
+  currentUser: user.currentUser
+})
+
+
 const mapDispatchToProps = dispatch => {
   return {
     setCurrentUser: user => dispatch(setCurrentUser(user))
   }
 }
 
-export default connect(null, mapDispatchToProps)(App);
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
