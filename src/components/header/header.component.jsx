@@ -1,6 +1,8 @@
 import React from 'react'
 import './header.styles.scss';
 import { Link } from 'react-router-dom';
+import CartIcon from '../cart-icon/cart-icon.component';
+import CartDropdown from '../cart-dropdown/cart-dropdown.component';
 
 // code for importing SVG logo
 import { ReactComponent as Logo } from '../../assets/crown.svg';
@@ -8,8 +10,10 @@ import { auth } from '../../firebase/firebase.utils'
 
 // Redux component
 import { connect } from 'react-redux';
+import { toggleShowCart } from '../../redux/cart/cart.actions';
 
-const Header = ({ currentUser }) => {
+
+const Header = ({ currentUser, cartHidden, toggleShowCart }) => {
   return (
     <div className="header">
       <Link to="/" className="logo-container">
@@ -26,15 +30,28 @@ const Header = ({ currentUser }) => {
 
         <Link to="/shop" className="option">Shop</Link>
         <Link to="/contact" className="option">Contact</Link>
+        <CartIcon onClick={toggleShowCart} />
       </div>
+      {
+        cartHidden ? null :
+          <CartDropdown />
+      }
+
     </div >
   )
 }
 
-const mapStateToProps = (state) => {
+const mapDispatchToProps = dispatch => {
   return {
-    currentUser: state.user.currentUser
+    toggleShowCart: () => dispatch(toggleShowCart())
   }
 }
 
-export default connect(mapStateToProps)(Header)
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.user.currentUser,
+    cartHidden: state.cart.hidden
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)
