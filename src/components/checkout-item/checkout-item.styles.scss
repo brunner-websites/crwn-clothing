@@ -16,6 +16,12 @@
       height: 100%;
     }
   }
+
+  .quantity-changer {
+    cursor: pointer;
+    padding: 0px 3px;
+  }
+
   .name,
   .quantity,
   .price {

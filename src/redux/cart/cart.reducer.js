@@ -14,14 +14,32 @@ const cartReducer = (state = INITIAL_STATE, action) => {
         ...state,
         hidden: !state.hidden
       }
-    case CartActionTypes.ADD_ITEM:
 
+    case CartActionTypes.ADD_ITEM:
       const updatedItems = addItemToCart(state.cartItems, action.payload);
+
       return {
         ...state,
-        //cartItems: state.cartItems.map(item => item.id === action.payload.id ? action.payload : item)
         cartItems: updatedItems
       }
+
+    case CartActionTypes.REMOVE_ITEM:
+
+      return {
+        ...state,
+        cartItems: state.cartItems.map(item =>
+          (item.id === action.payload && item.quantity > 1) ? { ...item, quantity: item.quantity - 1 } : item
+        )
+      }
+
+    case CartActionTypes.CLEAR_ITEM_FROM_CART:
+      console.log("in here", action.payload)
+      return {
+        ...state,
+        cartItems: state.cartItems.filter((item) => item.id !== action.payload)
+      }
+
+
     default:
       return state;
   }
