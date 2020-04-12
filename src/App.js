@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
+import './App.css';
+
 import HomePage from './pages/homepage/homepage.component';
 import Shop from './pages/shop/shop.compoment';
-import Header from './components/header/header.component';
+import Checkout from './pages/checkout/checkout.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import './App.css';
+
+import Header from './components/header/header.component';
+
 
 // Redux
 import { connect } from 'react-redux';
 import { setCurrentUser } from './redux/user/user.actions';
+import { selectCurrentUser } from './redux/user/user.selector';
 
 import { auth, createOrRetrieveUserProfileDocument } from './firebase/firebase.utils'
 
@@ -31,7 +36,6 @@ class App extends Component {
         // userAuth is an auth object from firebase
         if (userAuth) {
           const userRef = await createOrRetrieveUserProfileDocument(userAuth);
-
           userRef.onSnapshot(snapShot => {
             setCurrentUser({
               id: snapShot.id,
@@ -61,7 +65,8 @@ class App extends Component {
           <Switch>
 
             <Route exact path="/" component={HomePage} />
-            <Route exact path="/shop" component={Shop} />
+            <Route path="/shop" component={Shop} />
+            <Route exact path="/checkout" component={Checkout} />
             <Route exact path="/signin" render={() =>
               this.props.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />} />
 
@@ -75,8 +80,8 @@ class App extends Component {
 
 // this function when passed into the connect method will receive the 'state'
 // here we're destructing the 'user' property from within the 'state' property
-const mapStateToProps = ({ user }) => ({
-  currentUser: user.currentUser
+const mapStateToProps = (state) => ({
+  currentUser: selectCurrentUser(state)
 })
 
 
