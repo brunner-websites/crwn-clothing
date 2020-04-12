@@ -10,8 +10,6 @@ import { auth } from '../../firebase/firebase.utils'
 
 // Redux component
 import { connect } from 'react-redux';
-import { toggleShowCart } from '../../redux/cart/cart.actions';
-
 
 const Header = ({ currentUser, cartHidden, toggleShowCart }) => {
   return (
@@ -30,7 +28,7 @@ const Header = ({ currentUser, cartHidden, toggleShowCart }) => {
 
         <Link to="/shop" className="option">Shop</Link>
         <Link to="/contact" className="option">Contact</Link>
-        <CartIcon onClick={toggleShowCart} />
+        <CartIcon />
       </div>
       {
         cartHidden ? null :
@@ -41,11 +39,6 @@ const Header = ({ currentUser, cartHidden, toggleShowCart }) => {
   )
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleShowCart: () => dispatch(toggleShowCart())
-  }
-}
 
 const mapStateToProps = (state) => {
   return {
@@ -54,4 +47,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header)
+export default connect(mapStateToProps)(Header)
