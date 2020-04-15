@@ -33,7 +33,7 @@ export const createOrRetrieveUserProfileDocument = async (userAuth, additionalDa
     const createdAt = new Date();
 
     try {
-      // use the query reference to save the actualy data into the db
+      // use the query reference to save the actual data into the db
       await userRef.set({
         displayName,
         email,
@@ -47,6 +47,47 @@ export const createOrRetrieveUserProfileDocument = async (userAuth, additionalDa
 
   return userRef;
 }
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+
+  const collectionRef = firestore.collection(collectionKey);
+
+  const batch = firestore.batch();
+
+  objectsToAdd.forEach(object => {
+    const newDocRef = collectionRef.doc();
+
+    batch.set(newDocRef, object);
+
+  });
+
+  return await batch.commit();
+}
+
+
+export const convertCollectionSnapshotToMap = collections => {
+
+  // .docs() gets QuerySnapshotArray
+  const transformedCollections = collections.docs.map(doc => {
+
+    // .data() gets the actual data
+    const { title, items } = doc.data();
+
+    return {
+      id: doc.id,
+      routeName: encodeURI(title.toLowerCase()),
+      title,
+      items
+    }
+  })
+
+  return transformedCollections.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+
+    return accumulator;
+  }, {});
+}
+
 
 firebase.initializeApp(config);
 

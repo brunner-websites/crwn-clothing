@@ -17,6 +17,7 @@ import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
 
 import { auth, createOrRetrieveUserProfileDocument } from './firebase/firebase.utils'
+// import { addCollectionAndDocuments } from './firebase/firebase.utils';
 
 
 class App extends Component {
@@ -49,6 +50,10 @@ class App extends Component {
 
         //setCurrentUser({ userAuth });
       });
+
+
+    // this code was only called 1 time to put the shop-collections into the firebase db
+    //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })));
   }
 
   componentWillUnmount() {
@@ -81,13 +86,13 @@ class App extends Component {
 // this function when passed into the connect method will receive the 'state'
 // here we're destructing the 'user' property from within the 'state' property
 const mapStateToProps = (state) => ({
-  currentUser: selectCurrentUser(state)
+  currentUser: selectCurrentUser(state),
 })
 
 
 const mapDispatchToProps = dispatch => {
   return {
-    setCurrentUser: user => dispatch(setCurrentUser(user))
+    setCurrentUser: user => dispatch(setCurrentUser(user)),
   }
 }
 

@@ -11,7 +11,6 @@ import { selectCollectionsForPreview } from '../../redux/shop/shop.selector';
 
 
 const CollectionsOverview = ({ collections }) => {
-  console.log(collections);
   return (
     <div className="collection-overview">
       {
