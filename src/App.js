@@ -29,28 +29,26 @@ class App extends Component {
 
     const { setCurrentUser } = this.props;
 
-    this.unsubscribeFromAuth =
 
-      // when the AuthState changes e.g. when a user logs in
-      auth.onAuthStateChanged(async userAuth => {
+    // this.unsubscribeFromAuth =
+    //   // when the AuthState changes e.g. when a user logs in
+    //   auth.onAuthStateChanged(async userAuth => {
 
-        // userAuth is an auth object from firebase
-        if (userAuth) {
-          const userRef = await createOrRetrieveUserProfileDocument(userAuth);
-          userRef.onSnapshot(snapShot => {
-            setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
-            })
-          })
-        } else {
-          setCurrentUser(null);
-          //setCurrentUser({userAuth})
-        }
-
-        //setCurrentUser({ userAuth });
-      });
-
+    //     // userAuth is an auth object from firebase
+    //     if (userAuth) {
+    //       const userRef = await createOrRetrieveUserProfileDocument(userAuth);
+    //       userRef.onSnapshot(snapShot => {
+    //         setCurrentUser({
+    //           id: snapShot.id,
+    //           ...snapShot.data()
+    //         })
+    //       })
+    //     } else {
+    //       setCurrentUser(null);
+    //       //setCurrentUser({userAuth})
+    //     }
+    //  }
+    //  );
 
     // this code was only called 1 time to put the shop-collections into the firebase db
     //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })));
