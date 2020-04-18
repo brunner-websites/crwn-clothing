@@ -11,7 +11,7 @@ import CollectionPageContainer from '../collection/collection.container'
 
 // redux
 import { connect } from 'react-redux';
-import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions'
+import { fetchCollectionsStart } from '../../redux/shop/shop.actions'
 import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selector'
 
 
@@ -19,7 +19,7 @@ import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selector'
 class Shop extends Component {
 
   componentDidMount() {
-    this.props.fetchCollectionsStartAsync();
+    this.props.fetchCollectionsStart();
   };
 
   componentWillUnmount() {
@@ -50,7 +50,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
+    fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
   }
 }
 

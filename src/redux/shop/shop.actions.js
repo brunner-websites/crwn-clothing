@@ -1,6 +1,6 @@
 import ShopActionTypes from './shop.types';
 
-import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils'
+//import { firestore, convertCollectionSnapshotToMap } from '../../firebase/firebase.utils'
 
 export const fetchCollectionsStart = () => {
   return {
@@ -22,6 +22,8 @@ export const fetchCollectionsFailure = error => {
   }
 }
 
+// saga-fied -> this is now handled in the shop.sagas file
+/*
 export const fetchCollectionsStartAsync = () => {
   return dispatch => {
 
@@ -37,6 +39,6 @@ export const fetchCollectionsStartAsync = () => {
       .catch(error => {
         dispatch(fetchCollectionsFailure(error.message));
       });
-
   }
 }
+*/
