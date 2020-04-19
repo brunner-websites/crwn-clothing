@@ -13,12 +13,8 @@ import Header from './components/header/header.component';
 
 // Redux
 import { connect } from 'react-redux';
-import { setCurrentUser } from './redux/user/user.actions';
 import { selectCurrentUser } from './redux/user/user.selector';
-
-import { auth, createOrRetrieveUserProfileDocument } from './firebase/firebase.utils'
-// import { addCollectionAndDocuments } from './firebase/firebase.utils';
-
+import { checkUserSession } from './redux/user/user.actions';
 
 class App extends Component {
 
@@ -27,31 +23,9 @@ class App extends Component {
 
   componentDidMount() {
 
-    const { setCurrentUser } = this.props;
+    const { checkUserSession } = this.props;
 
-
-    // this.unsubscribeFromAuth =
-    //   // when the AuthState changes e.g. when a user logs in
-    //   auth.onAuthStateChanged(async userAuth => {
-
-    //     // userAuth is an auth object from firebase
-    //     if (userAuth) {
-    //       const userRef = await createOrRetrieveUserProfileDocument(userAuth);
-    //       userRef.onSnapshot(snapShot => {
-    //         setCurrentUser({
-    //           id: snapShot.id,
-    //           ...snapShot.data()
-    //         })
-    //       })
-    //     } else {
-    //       setCurrentUser(null);
-    //       //setCurrentUser({userAuth})
-    //     }
-    //  }
-    //  );
-
-    // this code was only called 1 time to put the shop-collections into the firebase db
-    //addCollectionAndDocuments('collections', collectionsArray.map(({ title, items }) => ({ title, items })));
+    checkUserSession();
   }
 
   componentWillUnmount() {
@@ -90,7 +64,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    setCurrentUser: user => dispatch(setCurrentUser(user)),
+    checkUserSession: () => dispatch(checkUserSession()),
   }
 }
 

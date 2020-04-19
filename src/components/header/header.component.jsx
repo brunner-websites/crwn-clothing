@@ -9,16 +9,14 @@ import { HeaderContainer, LogoContainer, OptionsContainer, OptionLink, OptionDiv
 // code for importing SVG logo
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
-// firebase
-import { auth } from '../../firebase/firebase.utils'
-
 // Redux components
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect'
 import { selectCurrentUser } from '../../redux/user/user.selector';
 import { selectCartHidden } from '../../redux/cart/cart.selectors';
+import { signOutStart } from '../../redux/user/user.actions';
 
-const Header = ({ currentUser, cartHidden }) => {
+const Header = ({ currentUser, cartHidden, signOutStart }) => {
 
   return (
 
@@ -30,7 +28,7 @@ const Header = ({ currentUser, cartHidden }) => {
 
         {
           currentUser ?
-            <OptionDiv onClick={() => auth.signOut()}>
+            <OptionDiv onClick={signOutStart}>
               Sign Out
             </OptionDiv>
             :
@@ -58,4 +56,8 @@ const mapStateToProps = (state) => createStructuredSelector({
   cartHidden: selectCartHidden
 })
 
-export default connect(mapStateToProps)(Header)
+const mapDispatchToProps = dispatch => ({
+  signOutStart: () => dispatch(signOutStart())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)
