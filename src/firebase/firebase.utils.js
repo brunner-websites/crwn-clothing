@@ -13,6 +13,7 @@ const config = {
   measurementId: "G-49Y0GXWQ40"
 };
 
+
 export const createOrRetrieveUserProfileDocument = async (userAuth, additionalData) => {
 
   if (!userAuth) return;

@@ -7,27 +7,46 @@ import {
   googleSignInFailure,
   emailSignInSuccess,
   emailSignInFailure,
+  signInSuccess,
+  signInFailure,
   signOutSuccess,
-  signOutFailure
+  signOutFailure,
+  signUpSuccess,
+  signUpFailure
 } from './user.actions';
 
 
 // Sign in with Google Functions
+
+export function* getSnapshotFromUserAuth(userAuth, additionalData) {
+  try {
+    const userRef = yield call(
+      createOrRetrieveUserProfileDocument,
+      userAuth,
+      additionalData
+    );
+    const userSnapshot = yield userRef.get();
+    yield put(signInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+  } catch (error) {
+    yield put(signInFailure(error));
+  }
+}
+
 export function* signInWithGoogle() {
   try {
     const { user } = yield auth.signInWithPopup(googleProvider);
-    const userRef = yield call(createOrRetrieveUserProfileDocument, user);
-    const userSnapshot = yield userRef.get();
-    yield put(googleSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    // const userRef = yield call(createOrRetrieveUserProfileDocument, user);
+    // const userSnapshot = yield userRef.get();
+    // yield put(googleSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    yield getSnapshotFromUserAuth(user);
   } catch (error) {
-    yield (put(googleSignInFailure(error)));
+    yield (put(signInFailure(error)));
   }
 }
 
 export function* onGoogleSignInStart() {
   yield takeLatest(UserActionTypes.GOOGLE_SIGN_IN_START, signInWithGoogle);
 }
-
 
 // Sign-In with Email functions
 
@@ -36,14 +55,15 @@ export function* signInWithEmail({ payload: { email, password } }) {
 
   try {
     const { user } = yield auth.signInWithEmailAndPassword(email, password);
-    const userRef = yield call(createOrRetrieveUserProfileDocument, user);
-    const userSnapshot = yield userRef.get();
+    // const userRef = yield call(createOrRetrieveUserProfileDocument, user);
+    // const userSnapshot = yield userRef.get();
 
-    // put does the same as dispatch
-    yield put(emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    // // put does the same as dispatch
+    // yield put(emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    yield getSnapshotFromUserAuth(user);
 
   } catch (error) {
-    yield put(emailSignInFailure(error.message));
+    yield put(signInFailure(error.message));
   }
 }
 
@@ -60,11 +80,13 @@ export function* isUserAuthenticated() {
 
     if (!userAuth) return;
 
-    const userRef = yield call(createOrRetrieveUserProfileDocument, userAuth);
-    const userSnapshot = yield userRef.get();
-    yield put(emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+    // const userRef = yield call(createOrRetrieveUserProfileDocument, userAuth);
+    // const userSnapshot = yield userRef.get();
+    // yield put(emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() }));
+
+    yield getSnapshotFromUserAuth(userAuth);
   } catch (error) {
-    yield put(emailSignInFailure(error))
+    yield put(signInFailure(error))
   }
 }
 
@@ -88,6 +110,32 @@ export function* listenForUserSignOout() {
 }
 
 
+// sign-up sagas
+export function* signUp({ payload: { email, password, displayName } }) {
+  try {
+    const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+    yield createOrRetrieveUserProfileDocument(user, { displayName });
+    alert("successfully signed up");
+    yield put(signUpSuccess({ user, additionalData: { displayName } }));
+
+  } catch (error) {
+    yield put(signUpFailure(error));
+  }
+}
+
+export function* onSignUpSuccess({ payload: { user, additionalData } }) {
+  yield getSnapshotFromUserAuth(user, additionalData);
+}
+
+export function* listenForUserSignUp() {
+  yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
+}
+
+export function* listenForUserSignUpSuccess() {
+  yield takeLatest(UserActionTypes.SIGN_UP_SUCCESS, onSignUpSuccess);
+}
+
+
 
 
 export function* userSagas() {
@@ -95,7 +143,9 @@ export function* userSagas() {
     call(onGoogleSignInStart),
     call(listenForEmailSignInStart),
     call(listenForCheckUserSession),
-    call(listenForUserSignOout)
+    call(listenForUserSignOout),
+    call(listenForUserSignUp),
+    call(listenForUserSignUpSuccess)
   ]);
 };
 

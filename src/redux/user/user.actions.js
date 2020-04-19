@@ -1,5 +1,26 @@
 import { UserActionTypes } from './user.types'
 
+// Generic Sign-In Actions
+export const signInStart = () => {
+  return {
+    type: UserActionTypes.GOOGLE_SIGN_IN_START
+  }
+}
+
+export const signInSuccess = user => {
+  return {
+    type: UserActionTypes.GOOGLE_SIGN_IN_SUCCESS,
+    payload: user
+  }
+}
+
+export const signInFailure = error => {
+  return {
+    type: UserActionTypes.GOOGLE_SIGN_IN_FAILURE,
+    payload: error.message
+  }
+}
+
 // Google Sign-In Actions
 export const googleSignInStart = () => {
   return {
@@ -67,6 +88,29 @@ export const signOutSuccess = () => {
 export const signOutFailure = error => {
   return {
     type: UserActionTypes.SIGN_OUT_FAILURE,
+    payload: error.message
+  }
+}
+
+
+// sign up actions
+export const signUpStart = newUserInfo => {
+  return {
+    type: UserActionTypes.SIGN_UP_START,
+    payload: newUserInfo
+  }
+}
+
+export const signUpSuccess = ({ user, additionalData }) => {
+  return {
+    type: UserActionTypes.SIGN_UP_SUCCESS,
+    payload: { user, additionalData }
+  }
+}
+
+export const signUpFailure = error => {
+  return {
+    type: UserActionTypes.SIGN_UP_FAILURE,
     payload: error.message
   }
 }
