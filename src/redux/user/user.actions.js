@@ -9,14 +9,14 @@ export const signInStart = () => {
 
 export const signInSuccess = user => {
   return {
-    type: UserActionTypes.GOOGLE_SIGN_IN_SUCCESS,
+    type: UserActionTypes.SIGN_IN_SUCCESS,
     payload: user
   }
 }
 
 export const signInFailure = error => {
   return {
-    type: UserActionTypes.GOOGLE_SIGN_IN_FAILURE,
+    type: UserActionTypes.SIGN_IN_FAILURE,
     payload: error.message
   }
 }

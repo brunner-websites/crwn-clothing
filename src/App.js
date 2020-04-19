@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 
 import './App.css';
@@ -16,43 +16,30 @@ import { connect } from 'react-redux';
 import { selectCurrentUser } from './redux/user/user.selector';
 import { checkUserSession } from './redux/user/user.actions';
 
-class App extends Component {
+const App = ({ checkUserSession, currentUser }) => {
 
-  unsubscribeFromAuth = null;
-
-
-  componentDidMount() {
-
-    const { checkUserSession } = this.props;
+  useEffect(() => {
 
     checkUserSession();
-  }
 
-  componentWillUnmount() {
-    this.unsubscribeFromAuth();
-  }
+  }, [checkUserSession])
 
+  return (
+    <div>
+      <BrowserRouter>
+        <Header />
+        <Switch>
 
-  render() {
+          <Route exact path="/" component={HomePage} />
+          <Route path="/shop" component={Shop} />
+          <Route exact path="/checkout" component={Checkout} />
+          <Route exact path="/signin" render={() =>
+            currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />} />
 
-    return (
-      <div>
-        <BrowserRouter>
-          <Header />
-          <Switch>
-
-            <Route exact path="/" component={HomePage} />
-            <Route path="/shop" component={Shop} />
-            <Route exact path="/checkout" component={Checkout} />
-            <Route exact path="/signin" render={() =>
-              this.props.currentUser ? <Redirect to="/" /> : <SignInAndSignUpPage />} />
-
-          </Switch>
-        </BrowserRouter>
-      </div>
-    );
-  }
-
+        </Switch>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 // this function when passed into the connect method will receive the 'state'

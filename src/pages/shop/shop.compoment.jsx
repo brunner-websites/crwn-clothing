@@ -1,5 +1,5 @@
 // react
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Route } from 'react-router-dom'
 
 // css
@@ -16,31 +16,23 @@ import { selectIsCollectionsLoaded } from '../../redux/shop/shop.selector'
 
 
 
-class Shop extends Component {
+const Shop = ({ fetchCollectionsStart, isCollectionsLoaded, match }) => {
 
-  componentDidMount() {
-    this.props.fetchCollectionsStart();
-  };
+  useEffect(() => {
+    fetchCollectionsStart();
+  }, [fetchCollectionsStart]);
 
-  componentWillUnmount() {
 
-  }
-
-  render() {
-
-    const { match } = this.props;
-
-    return (
-      <div className="shop-page">
-        <Route
-          exact path={`${match.path}`}
-          component={CollectionsOverviewContainer} />
-        <Route
-          path={`${match.path}/:collectionId`}
-          component={CollectionPageContainer} />
-      </div>
-    )
-  }
+  return (
+    <div className="shop-page">
+      <Route
+        exact path={`${match.path}`}
+        component={CollectionsOverviewContainer} />
+      <Route
+        path={`${match.path}/:collectionId`}
+        component={CollectionPageContainer} />
+    </div>
+  )
 
 }
 
